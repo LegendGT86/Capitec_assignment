@@ -12,20 +12,21 @@ export class InventoryPage {
     this.cartIcon = page.locator('.shopping_cart_link');
   }
 
-  async addItemToCart(itemName: string) {
-    const item = this.page.locator('.inventory_item').filter({
+  // 🔹 Private helper to avoid duplication
+  private getItemByName(itemName: string): Locator {
+    return this.page.locator('.inventory_item').filter({
       hasText: itemName,
     });
+  }
 
-    await item.locator('button').click();
+  async addItemToCart(itemName: string) {
+    const item = this.getItemByName(itemName);
+    await item.getByRole('button', { name: /add to cart/i }).click();
   }
 
   async removeItemFromCart(itemName: string) {
-    const item = this.page.locator('.inventory_item').filter({
-      hasText: itemName,
-    });
-
-    await item.locator('button').click();
+    const item = this.getItemByName(itemName);
+    await item.getByRole('button', { name: /remove/i }).click();
   }
 
   async goToCart() {
