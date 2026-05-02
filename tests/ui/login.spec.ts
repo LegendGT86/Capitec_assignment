@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { LoginPage } from '@pages/LoginPage';
 
 test.describe('Login functionality', () => {
+
   test('should login successfully with standard user', async ({ page }) => {
     const login = new LoginPage(page);
 
@@ -19,4 +20,5 @@ test.describe('Login functionality', () => {
 
     await expect(login.errorMessage).toBeVisible();
   });
+
 });
