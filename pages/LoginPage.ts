@@ -12,18 +12,22 @@ export class LoginPage {
 
     this.usernameInput = page.locator('#user-name');
     this.passwordInput = page.locator('#password');
-    this.loginButton = page.locator('#login-button');
+    this.loginButton = page.getByRole('button', { name: /login/i });
     this.errorMessage = page.locator('[data-test="error"]');
   }
 
   async goto() {
-    await this.page.goto('https://www.saucedemo.com/');
+    await this.page.goto('/');
   }
 
   async login(username: string, password: string) {
     await this.usernameInput.fill(username);
     await this.passwordInput.fill(password);
-    await this.loginButton.click();
+
+    await Promise.all([
+      this.page.waitForURL(/inventory/),
+      this.loginButton.click(),
+    ]);
   }
 
   async loginAsStandardUser() {
@@ -32,5 +36,9 @@ export class LoginPage {
 
   async loginAsLockedUser() {
     await this.login('locked_out_user', 'secret_sauce');
+  }
+
+  async getErrorMessage(): Promise<string | null> {
+    return this.errorMessage.textContent();
   }
 }
