@@ -12,7 +12,6 @@ export class InventoryPage {
     this.cartIcon = page.locator('.shopping_cart_link');
   }
 
-  // 🔹 Private helper to avoid duplication
   private getItemByName(itemName: string): Locator {
     return this.page.locator('.inventory_item').filter({
       hasText: itemName,

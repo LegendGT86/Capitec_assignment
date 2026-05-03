@@ -25,12 +25,4 @@ export class LoginPage {
     await this.passwordInput.fill(password);
     await this.loginButton.click();
   }
-
-  async loginAsStandardUser() {
-    await this.login('standard_user', 'secret_sauce');
-  }
-
-  async loginAsLockedUser() {
-    await this.login('locked_out_user', 'secret_sauce');
-  }
 }

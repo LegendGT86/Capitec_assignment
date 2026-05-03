@@ -1,29 +1,44 @@
 import { test, expect } from '@playwright/test';
+
 import { LoginPage } from '@pages/LoginPage';
 import { InventoryPage } from '@pages/InventoryPage';
 
+import { users } from '../../test-data/users';
+import { products } from '../../test-data/products';
+
 test.describe('Inventory page', () => {
-  test('should display products after login', async ({ page }) => {
+
+  test('@ui @inventory should display products after login', async ({ page }) => {
     const login = new LoginPage(page);
     const inventory = new InventoryPage(page);
 
     await login.goto();
-    await login.loginAsStandardUser();
+
+    await login.login(
+      users.standard.username,
+      users.standard.password
+    );
 
     const count = await inventory.getInventoryCount();
+
     expect(count).toBeGreaterThan(0);
   });
 
-  test('should add item to cart', async ({ page }) => {
+  test('@ui @inventory should add item to cart', async ({ page }) => {
     const login = new LoginPage(page);
     const inventory = new InventoryPage(page);
 
     await login.goto();
-    await login.loginAsStandardUser();
 
-    await inventory.addItemToCart('Sauce Labs Backpack');
+    await login.login(
+      users.standard.username,
+      users.standard.password
+    );
+
+    await inventory.addItemToCart(products.backpack.name);
     await inventory.goToCart();
 
     await expect(page).toHaveURL(/cart/);
   });
+
 });

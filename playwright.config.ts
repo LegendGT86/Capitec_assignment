@@ -4,13 +4,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // Environment variables
-const BASE_URL = process.env.UI_BASE_URL || 'http://localhost:3000';
-const API_BASE_URL = process.env.API_BASE_URL;
+const BASE_URL = process.env.UI_BASE_URL || 'https://www.saucedemo.com';
+const API_BASE_URL = process.env.API_BASE_URL || 'https://restful-booker.herokuapp.com';
 const ENV = process.env.ENV || 'qa_testing';
-
-if (!API_BASE_URL) {
-  throw new Error('Missing API_BASE_URL in environment variables');
-}
 
 export default defineConfig({
   testDir: './tests',
@@ -21,7 +17,7 @@ export default defineConfig({
 
   /* ---------------- REPORTING (MONOCART) ---------------- */
   reporter: [
-    ['list'], // keep for terminal feedback (optional but recommended)
+    ['list'],
     ['monocart-reporter', {
       name: 'Automation Assessment Report',
       outputFile: './monocart-report/index.html',
@@ -32,11 +28,6 @@ export default defineConfig({
         baseURL: BASE_URL,
         apiURL: API_BASE_URL,
       },
-
-      columns: (defaultColumns: any) => [
-        ...defaultColumns,
-        { id: 'project', name: 'Project' },
-      ],
     }]
   ],
 
@@ -50,37 +41,25 @@ export default defineConfig({
     viewport: { width: 1280, height: 720 },
     ignoreHTTPSErrors: true,
 
-    // Debugging artifacts (Monocart will surface these)
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-
-    launchOptions: {
-      headless: true,
-      slowMo: 50,
-    },
-
-    extraHTTPHeaders: {
-      Accept: 'application/json',
-    },
   },
 
+  /* ---------------- PROJECTS ---------------- */
   projects: [
-    /* ----- UI TESTS ----- */
     {
-      name: 'ui-chromium',
-      testMatch: /.*\.spec\.ts/,
+      name: 'ui',
+      testDir: './tests/ui',
       use: {
         ...devices['Desktop Chrome'],
         baseURL: BASE_URL,
       },
       fullyParallel: true,
     },
-
-    /* ----- API TESTS ----- */
     {
       name: 'api',
-      testMatch: /.*\.api\.ts/,
+      testDir: './tests/api',
       use: {
         baseURL: API_BASE_URL,
         extraHTTPHeaders: {
@@ -89,8 +68,6 @@ export default defineConfig({
         },
       },
       fullyParallel: false,
-      retries: 0,
-      timeout: 10000,
     },
   ],
 });
