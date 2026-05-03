@@ -1,14 +1,21 @@
 import { Page, Locator } from '@playwright/test';
 
+type CheckoutDetails = {
+  firstName: string;
+  lastName: string;
+  postalCode: string;
+};
+
 export class CheckoutPage {
   readonly page: Page;
 
   readonly firstNameInput: Locator;
   readonly lastNameInput: Locator;
   readonly postalCodeInput: Locator;
-  readonly continueButton: Locator;
 
+  readonly continueButton: Locator;
   readonly finishButton: Locator;
+
   readonly successMessage: Locator;
 
   constructor(page: Page) {
@@ -24,10 +31,10 @@ export class CheckoutPage {
     this.successMessage = page.locator('.complete-header');
   }
 
-  async fillCheckoutDetails(firstName: string, lastName: string, postalCode: string) {
-    await this.firstNameInput.fill(firstName);
-    await this.lastNameInput.fill(lastName);
-    await this.postalCodeInput.fill(postalCode);
+  async fillCheckoutDetails(data: CheckoutDetails) {
+    await this.firstNameInput.fill(data.firstName);
+    await this.lastNameInput.fill(data.lastName);
+    await this.postalCodeInput.fill(data.postalCode);
   }
 
   async continueCheckout() {
@@ -45,6 +52,6 @@ export class CheckoutPage {
   }
 
   async isCheckoutComplete(): Promise<boolean> {
-    return await this.successMessage.isVisible();
+    return this.successMessage.isVisible();
   }
 }

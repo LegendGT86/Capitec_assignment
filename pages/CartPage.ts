@@ -12,11 +12,11 @@ export class CartPage {
     this.checkoutButton = page.locator('#checkout');
   }
 
-  async getCartItemCount() {
-    return await this.cartItems.count();
+  async getCartItemCount(): Promise<number> {
+    return this.cartItems.count();
   }
 
-  async proceedToCheckout() {
+  async proceedToCheckout(): Promise<void> {
     await this.checkoutButton.click();
   }
 }
